@@ -292,6 +292,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1498075357}
   - component: {fileID: 1498075356}
+  - component: {fileID: 1498075358}
   m_Layer: 0
   m_Name: GridTest
   m_TagString: Untagged
@@ -311,7 +312,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d26a237970a9fec43aa3c6df49c17c5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  runPlayerTests: 1
+  runGridValidityTests: 1
+  runTileWallAccessTests: 1
   testPlayer: {fileID: 1252008415}
+  grid: {fileID: 1498075358}
 --- !u!4 &1498075357
 Transform:
   m_ObjectHideFlags: 0
@@ -327,6 +332,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1498075358
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1498075355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d4f7d701ea38e34cbc4106164036108, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tilePrefabTemplate: {fileID: 871419164100818968, guid: 75f1ce5b98058004e879c2a4cf76652c, type: 3}
+  DEBUG_MODE: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
