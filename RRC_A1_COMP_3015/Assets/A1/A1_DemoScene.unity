@@ -338,6 +338,14 @@ PrefabInstance:
       propertyPath: grid
       value: 
       objectReference: {fileID: 22087806}
+    - target: {fileID: 7104726645435656132, guid: d5751bed5cb63b341874f6e42c4ed422, type: 3}
+      propertyPath: xStartTiles
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7104726645435656132, guid: d5751bed5cb63b341874f6e42c4ed422, type: 3}
+      propertyPath: yStartTiles
+      value: 20
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

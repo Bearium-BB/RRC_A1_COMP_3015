@@ -17,8 +17,6 @@ namespace A1 {
         private float timePassFromLastInput;
         // --- Input  --- 
 
-
-
         public void Update() {
             ListenForInput();
 
@@ -106,7 +104,6 @@ namespace A1 {
         {
             currentPosX = xTargetPosition;
             currentPosY = yTargetPosition;
-            Debug.Log(xTargetPosition);
             transform.position = new Vector3(xTargetPosition, yTargetPosition, 0);
         }
 
