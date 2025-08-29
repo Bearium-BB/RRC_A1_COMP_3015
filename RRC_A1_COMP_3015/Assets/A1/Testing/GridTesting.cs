@@ -9,6 +9,8 @@ namespace A1 {
         public bool runPlayerTests = true;
         public bool runGridValidityTests = true;
         public bool runTileWallAccessTests = true;
+        public int movePlayerX = 3;
+        public int movePlayerY = 4;
 
         // Phase 1 - Player
         public Player testPlayer;
@@ -18,16 +20,17 @@ namespace A1 {
 
         // Start is called before the first frame update
         void Start() {
-            // While you don't strictly need the { } for one line calls, its often good practice to use them. 
-            if(runPlayerTests)
-                TestPlayer();
-
             if (runGridValidityTests)
                 TestGridValidity();
 
             if (runTileWallAccessTests) {
                 TestGridAccessTest();
             }
+
+            // While you don't strictly need the { } for one line calls, its often good practice to use them. 
+            if (runPlayerTests)
+                TestPlayer();
+
         }
 
         // --- Student Section ---
@@ -35,17 +38,28 @@ namespace A1 {
         // Update is called once per frame
         void TestPlayer() {
             // test position 1,1
-            testPlayer.SetPlayerPosition(1, 1);
+            testPlayer.SetPlayerPosition(movePlayerX, movePlayerY);
+
+            grid.IsValidTile(movePlayerX + 1, movePlayerY);
+            grid.IsValidTile(movePlayerX - 1, movePlayerY);
+            grid.IsValidTile(movePlayerX, movePlayerY + 1);
+            grid.IsValidTile(movePlayerX, movePlayerY - 1);
+
+            grid.IsAWallTile(movePlayerX + 1, movePlayerY);
+            grid.IsAWallTile(movePlayerX - 1, movePlayerY);
+            grid.IsAWallTile(movePlayerX, movePlayerY + 1);
+            grid.IsAWallTile(movePlayerX, movePlayerY - 1);
+            // Add more tests here. 
+
             Debug.Log(testPlayer.ToString());
 
-            // Add more tests here. 
         }
 
         // Phase 2
         void TestGridValidity() {
             // Init
             Debug.Log("Generating a new Test Grid of size 3,4");
-            grid.GenerateNewGrid_WithRandomWalls(3, 4, .5f);
+            grid.GenerateNewGrid_WithRandomWalls(3, 4, .7f);
             bool validFlag = false;
 
             // tests for boundaries - IsValid Tile: 

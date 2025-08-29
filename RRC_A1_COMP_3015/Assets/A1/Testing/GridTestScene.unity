@@ -314,7 +314,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   runPlayerTests: 1
   runGridValidityTests: 1
-  runTileWallAccessTests: 1
+  runTileWallAccessTests: 0
+  movePlayerX: 1
+  movePlayerY: 2
   testPlayer: {fileID: 1252008415}
   grid: {fileID: 1498075358}
 --- !u!4 &1498075357

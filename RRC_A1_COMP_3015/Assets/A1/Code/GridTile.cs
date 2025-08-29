@@ -35,9 +35,9 @@ namespace A1 {
 
         public void UpdateArt() {
             if (isWall) {
-                _spriteRenderer.color = Color.black; // Note the use of Static class Color to store colors. 
+                _spriteRenderer.color = new Color(1f, 94f / 255f, 0f);  // Note the use of Static class Color to store colors. 
             } else {
-                _spriteRenderer.color = Color.white;
+                _spriteRenderer.color = new Color(0f, 59f / 255f, 63f / 255f);
             }
         }
     }

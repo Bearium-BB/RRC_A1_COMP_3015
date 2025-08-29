@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using A1;
 
-
 namespace A1 {
 
     /*
@@ -147,10 +146,25 @@ namespace A1 {
         public bool IsValidTile(int xPosition, int yPosition) {
             // --- Provided Code - Don't Change me ---
             string debugMessage = "IsValidTile at (" + xPosition + ", " + yPosition + ")";
-            bool returnValue = false;
+            bool returnValue = true;
 
             // --- Student section ---
-            
+
+            int x = gridOfTiles.GetLength(0);
+            int y = gridOfTiles.GetLength(1);
+
+
+            if (xPosition < 0  || xPosition >= x)
+            {
+                returnValue = false;
+                debugMessage += " X value out of Bounce";
+            }
+
+            if (yPosition < 0 || yPosition >= y)
+            {
+                returnValue = false;
+                debugMessage += " Y value out of Bounce";
+            }
 
             // --- Provided Code - Don't Change me ---
             Debug.Log(debugMessage);
@@ -169,6 +183,16 @@ namespace A1 {
             bool isAWall = false; // Provided flag
 
             // --- Student Solution Section ---
+            if(IsValidTile(xPosition, yPosition))
+            {
+                isAWall = GetTile(xPosition, yPosition).IsAWall();
+                Debug.LogWarning("Is wall");
+            }
+            else
+            {
+                isAWall = false;
+                Debug.LogWarning("Invalid tile");
+            }
             
 
             return isAWall; // Provided return
