@@ -7,6 +7,10 @@ namespace A1 {
 
     [RequireComponent(typeof(SpriteRenderer))] // Will force this Scripts GameObjec to have a SpriteRenderer
     public class GridTile : MonoBehaviour {
+        public Sprite floor;
+        public Sprite wall;
+
+
         private SpriteRenderer _spriteRenderer;
 
         private bool isWall = false;
@@ -37,7 +41,8 @@ namespace A1 {
             if (isWall) {
                 _spriteRenderer.color = new Color(1f, 94f / 255f, 0f);  // Note the use of Static class Color to store colors. 
             } else {
-                _spriteRenderer.color = new Color(0f, 59f / 255f, 63f / 255f);
+                //_spriteRenderer.color = new Color(0f, 59f / 255f, 63f / 255f);
+                _spriteRenderer.sprite = floor;
             }
         }
     }

@@ -115,6 +115,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f00f7fbcd51906478089b9b13de2721, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  floor: {fileID: 21300000, guid: 6940fdcbe45087c40b7b3827e8139e68, type: 3}
+  wall: {fileID: 0}
 --- !u!114 &-24579346761409492
 MonoBehaviour:
   m_ObjectHideFlags: 0

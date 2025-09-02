@@ -89,11 +89,11 @@ namespace A1 {
 
             if (!isValid)
             {
-                StartCoroutine(InvaleMoveIndicator());
+                StartCoroutine(InvalidMoveIndicator());
             }
             else 
             {
-                StartCoroutine(valeMoveIndicator());
+                StartCoroutine(validMoveIndicator());
             }
 
             return isValid;
@@ -121,7 +121,7 @@ namespace A1 {
             return $"Player Location ({currentPosX},{currentPosY}) and position at {transform.position}";
         }
 
-        IEnumerator InvaleMoveIndicator()
+        IEnumerator InvalidMoveIndicator()
         {
             SpriteRenderer spriteRenderer;
             TryGetComponent(out spriteRenderer);
@@ -142,7 +142,7 @@ namespace A1 {
             yield return null;
 
         }
-        IEnumerator valeMoveIndicator()
+        IEnumerator validMoveIndicator()
         {
             transform.localScale = new Vector3(1.3f, 1.3f, 1.3f);
 
