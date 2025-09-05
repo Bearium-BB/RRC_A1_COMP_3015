@@ -1,4 +1,5 @@
 using A1;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -25,6 +26,12 @@ public class AStar
     }
     public List<AStarNode> pathFinding(Vector2Int startingNode, Vector2Int endNode)
     {
+        try
+        {
+        }
+        catch (Exception e)
+        {
+        }
         List<AStarNode> notSearchNodes = new List<AStarNode>();
         notSearchNodes.Add(new AStarNode(null, startingNode, endNode, startingNode));
         List<AStarNode> searchedNodes = new List<AStarNode>();

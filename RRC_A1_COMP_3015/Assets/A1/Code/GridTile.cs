@@ -50,7 +50,7 @@ namespace A1 {
             } 
             else {
                 //_spriteRenderer.color = new Color(0f, 59f / 255f, 63f / 255f);
-                _spriteRenderer.color = new Color(1f, 94f / 255f, 0f);
+                _spriteRenderer.sprite = floor;
             }
         }
     }

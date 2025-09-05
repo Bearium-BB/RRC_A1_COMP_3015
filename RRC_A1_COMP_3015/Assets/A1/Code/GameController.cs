@@ -9,8 +9,12 @@ namespace A1 {
 
         // Should be private but I'll leave it public so we can find it for now
         public Player currentPlayer;
+        public NPC currentNPC;
+        public Transform cam;
 
         public Player thePlayer_Prefab;
+        public NPC theNPC_Prefab;
+
         // Initialization Settings: 
 
         public int xStartTiles = 6;
@@ -29,15 +33,31 @@ namespace A1 {
             // Create the Grid
             grid.GenerateNewGrid_Witch_RandomWalls_And_Win_Point(xStartTiles, yStartTiles, wallProbability);
             currentPlayer = Instantiate(thePlayer_Prefab);
+            float NPCX = Random.Range(0, 50);
+            float NPCY = Random.Range(0, 50);
+
+            currentNPC = Instantiate(theNPC_Prefab,new Vector2(NPCX, NPCY),Quaternion.identity);
+            currentNPC.currentPosX = (int)NPCX;
+            currentNPC.currentPosY = (int)NPCY;
+
             currentPlayer.SetGrid(grid);
+            currentNPC.SetGrid(grid);
             aStar.SetGrid(grid);
+
+            currentNPC.winPointPos =  currentPlayer.transform;
+
             List<AStarNode> aStarNodes = aStar.pathFinding(Vector2Int.zero, grid.GetWinPointPos());
             if (aStarNodes.Count == 0)
             {
                 string currentSceneName = SceneManager.GetActiveScene().name;
                 SceneManager.LoadScene(currentSceneName);
             }
+
+        }
+        public void Update() 
+        {
+            cam.position = new Vector3(currentPlayer.transform.position.x, currentPlayer.transform.position.y,cam.position.z);
+        }
     }
-}
 }
 
