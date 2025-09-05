@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public class AStar
 {
@@ -28,62 +29,69 @@ public class AStar
     {
         try
         {
+            List<AStarNode> notSearchNodes = new List<AStarNode>();
+            notSearchNodes.Add(new AStarNode(null, startingNode, endNode, startingNode));
+            List<AStarNode> searchedNodes = new List<AStarNode>();
+
+            AStarNode currentnode = notSearchNodes.First();
+
+            while (notSearchNodes.Count > 0)
+            {
+                if (!ValidateMove(endNode.x, endNode.y))
+                {
+                    break;
+                }
+
+                List<AStarNode> neighbors = GetNeighbors(currentnode, endNode);
+
+                foreach (AStarNode neighbor in neighbors)
+                {
+                    if (!searchedNodes.Any(x => x.pos == neighbor.pos))
+                    {
+                        notSearchNodes.Add(neighbor);
+                    }
+                }
+
+                if (neighbors.Count == 0)
+                {
+                    break;
+                }
+
+                currentnode = notSearchNodes.OrderBy(x => x.f).FirstOrDefault();
+
+                notSearchNodes.Remove(currentnode);
+
+                if (!searchedNodes.Any(x => x.pos == currentnode.pos))
+                {
+                    searchedNodes.Add(currentnode);
+                }
+
+                if (currentnode.pos == endNode && currentnode != null)
+                {
+                    //Debug.Log("Done");
+                    List<AStarNode> parents = currentnode.GetAllParent();
+
+                    parents.Reverse();
+                    parents.Add(currentnode);
+                    parents.Reverse();
+
+                    //Debug.Log(parents.Count);
+                    //foreach (AStarNode node in parents)
+                    //{
+                    //    Debug.Log(node.pos);
+                    //}
+                    return parents;
+                }
+            }
+            return new List<AStarNode>();
+
         }
         catch (Exception e)
         {
+            Debug.LogError(e);
+            return new List<AStarNode>();        
         }
-        List<AStarNode> notSearchNodes = new List<AStarNode>();
-        notSearchNodes.Add(new AStarNode(null, startingNode, endNode, startingNode));
-        List<AStarNode> searchedNodes = new List<AStarNode>();
 
-        AStarNode currentnode = notSearchNodes.First();
-
-        while (notSearchNodes.Count > 0)
-        {
-            if (!ValidateMove(endNode.x, endNode.y))
-            {
-                break;
-            }
-
-            List<AStarNode> neighbors = GetNeighbors(currentnode, endNode);
-
-            foreach (AStarNode neighbor in neighbors)
-            {
-                if (!searchedNodes.Any(x => x.pos == neighbor.pos))
-                {
-                    notSearchNodes.Add(neighbor);
-                }
-            }
-
-            if (neighbors.Count == 0)
-            {
-                break;
-            }
-
-            currentnode = notSearchNodes.OrderBy(x => x.f).FirstOrDefault();
-
-            notSearchNodes.Remove(currentnode);
-
-            searchedNodes.Add(currentnode);
-
-            if (currentnode.pos == endNode)
-            {
-                Debug.Log("Done");
-                List<AStarNode> parents = currentnode.GetAllParent();
-
-                parents.Reverse();
-                parents.Add(currentnode);
-                parents.Reverse();
-
-                Debug.Log(parents.Count);
-                foreach (AStarNode node in parents)
-                {
-                    Debug.Log(node.pos);
-                }
-                return parents;
-            }
-        }
-        return new List<AStarNode>();
 
     }
 

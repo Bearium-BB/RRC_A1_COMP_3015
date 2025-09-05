@@ -1,4 +1,5 @@
 using A1;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,7 +20,6 @@ public class NPC : MonoBehaviour
     public void Start()
     {
         aStar.SetGrid(grid);
-        Debug.Log(winPointPos);
     }
 
     public void Update()
@@ -53,8 +53,15 @@ public class NPC : MonoBehaviour
         }
         else
         {
-            string currentSceneName = SceneManager.GetActiveScene().name;
-            SceneManager.LoadScene(currentSceneName);
+            try
+            {
+                string currentSceneName = SceneManager.GetActiveScene().name;
+                SceneManager.LoadScene(currentSceneName);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
         }
     }
 

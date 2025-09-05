@@ -1,8 +1,10 @@
+using A1;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using A1;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 namespace A1 {
     public class GameController : MonoBehaviour {
@@ -34,7 +36,7 @@ namespace A1 {
             grid.GenerateNewGrid_Witch_RandomWalls_And_Win_Point(xStartTiles, yStartTiles, wallProbability);
             currentPlayer = Instantiate(thePlayer_Prefab);
             float NPCX = Random.Range(0, 50);
-            float NPCY = Random.Range(0, 50);
+            float NPCY = Random.Range(0, 50); 
 
             currentNPC = Instantiate(theNPC_Prefab,new Vector2(NPCX, NPCY),Quaternion.identity);
             currentNPC.currentPosX = (int)NPCX;
@@ -49,8 +51,16 @@ namespace A1 {
             List<AStarNode> aStarNodes = aStar.pathFinding(Vector2Int.zero, grid.GetWinPointPos());
             if (aStarNodes.Count == 0)
             {
-                string currentSceneName = SceneManager.GetActiveScene().name;
-                SceneManager.LoadScene(currentSceneName);
+                try
+                {
+                    string currentSceneName = SceneManager.GetActiveScene().name;
+                    SceneManager.LoadScene(currentSceneName);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError(e);
+                }
+
             }
 
         }

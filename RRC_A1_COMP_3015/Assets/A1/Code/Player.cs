@@ -31,7 +31,6 @@ namespace A1 {
         {
             aStar.SetGrid(grid);
             winPointPos = grid.GetWinPointPos();
-            Debug.Log(winPointPos);
         }
 
         public void Update() {
@@ -121,8 +120,15 @@ namespace A1 {
             }
             else
             {
-                string currentSceneName = SceneManager.GetActiveScene().name;
-                SceneManager.LoadScene(currentSceneName);
+                try
+                {
+                    string currentSceneName = SceneManager.GetActiveScene().name;
+                    SceneManager.LoadScene(currentSceneName);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError(e);
+                }
             }
         } 
 
