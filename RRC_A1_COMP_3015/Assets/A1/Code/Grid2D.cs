@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using A1;
+using UnityEngine.UIElements;
 
 namespace A1 {
 
@@ -15,6 +16,8 @@ namespace A1 {
         // public int yMaxTiles = 4;
 
         private GridTile[,] gridOfTiles;
+
+        private Vector2Int winPointPos;
 
         // Note: Make sure this is set. 
         public GridTile tilePrefabTemplate;
@@ -80,6 +83,7 @@ namespace A1 {
 
             // Iterate the Grid
             // Since this is a 2D array (not an array of arrays) GetLength(0) is the X value, and GetLength(1) is the Y Value. 
+
             for (int i = 0; i < gridOfTiles.GetLength(0); i++) {
                 for (int j = 0; j < gridOfTiles.GetLength(1); j++) {
 
@@ -93,6 +97,44 @@ namespace A1 {
                 }
             }
         }
+
+        public void GenerateNewGrid_Witch_RandomWalls_And_Win_Point(int xSize, int ySize, float randomChanceTileIsWall)
+        {
+            gridOfTiles = new GridTile[xSize, ySize];
+
+            int winningPointX = Random.Range(0, xSize);
+            int winningPointY = Random.Range(0, ySize);
+
+            winPointPos = new Vector2Int(winningPointX, winningPointY);
+
+            CreateOneTile(winningPointX, winningPointY, false,true);
+
+
+            for (int i = 0; i < gridOfTiles.GetLength(0); i++)
+            {
+                for (int j = 0; j < gridOfTiles.GetLength(1); j++)
+                {
+                    //Debug.Log($"({j} , {i}) ({winningPointX} , {winningPointY}) {winningPointX == xSize && winningPointX == ySize}");
+
+                    if (winningPointX == i && winningPointY == j)
+                    {
+                        continue;
+                    }
+
+                    float randomRoll = Random.value;
+                    if (randomRoll < randomChanceTileIsWall)
+                    {
+                        CreateOneTile(i, j, true);
+                    }
+                    else
+                    {
+                        CreateOneTile(i, j, false);
+                    }
+                }
+            }
+        }
+
+
 
         // Create with Fixed pattern
         // [ ] For testing
@@ -136,6 +178,27 @@ namespace A1 {
             tile.transform.SetParent(transform);// makes the tile a child of this Grid. 
         }
 
+        private void CreateOneTile(int xPosition, int yPosition, bool isWall,bool isWinPoint)
+        {
+
+            GridTile tile = Instantiate(tilePrefabTemplate);
+
+            gridOfTiles[xPosition, yPosition] = tile; // Could have combined in one step but its helpful for debugging to not (especially when you are starting out). 
+
+            gridOfTiles[xPosition, yPosition].InitializeSelf(isWall, isWinPoint);
+
+            Vector3 newPosition = new Vector3(xPosition, yPosition, 0);
+
+            tile.transform.position = newPosition; 
+
+
+            tile.gameObject.name = "Tile (" + xPosition + ", " + yPosition + ")"; 
+
+            tile.transform.SetParent(transform);
+        }
+
+
+
 
 
         // TODO: Accessor method for the current size of the grid as a 2D Vector
@@ -167,7 +230,10 @@ namespace A1 {
             }
 
             // --- Provided Code - Don't Change me ---
-            Debug.Log(debugMessage);
+            if (DEBUG_MODE)
+            {
+                Debug.Log(debugMessage);
+            }
             return returnValue;
         }
 
@@ -185,20 +251,31 @@ namespace A1 {
             // --- Student Solution Section ---
             if(IsValidTile(xPosition, yPosition))
             {
-                isAWall = GetTile(xPosition, yPosition).IsAWall();
-                Debug.LogWarning("Is wall");
+                if (GetTile(xPosition, yPosition).IsAWall())
+                {
+                    if (DEBUG_MODE)
+                    {
+                        Debug.LogWarning("Is wall");
+                    }
+                    isAWall = true;
+                }
             }
             else
             {
-                isAWall = false;
-                Debug.LogWarning("Invalid tile");
+                isAWall = true;
+                if (DEBUG_MODE)
+                {
+                    Debug.LogWarning("Invalid tile");
+                }
             }
-            
 
             return isAWall; // Provided return
         }
 
-
+        public Vector2Int GetWinPointPos()
+        {
+            return winPointPos;
+        }
 
         // Stretch Goals
         // TODO: [ ] Destroy all tiles before refreshing to allow us to Regenerate the Grid.  

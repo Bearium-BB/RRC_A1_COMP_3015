@@ -3,6 +3,12 @@ using A1;
 using System.Threading;
 using System.ComponentModel;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEditor.Experimental.GraphView;
+using Unity.VisualScripting;
+using System;
+using UnityEngine.SceneManagement;
 
 namespace A1 {
 
@@ -15,7 +21,18 @@ namespace A1 {
         private int currentPosX;
         private int currentPosY;
         private float timePassFromLastInput;
+
+        private AStar aStar = new AStar();
+        private Vector2Int winPointPos;
+
         // --- Input  --- 
+
+        public void Start()
+        {
+            aStar.SetGrid(grid);
+            winPointPos = grid.GetWinPointPos();
+            Debug.Log(winPointPos);
+        }
 
         public void Update() {
             ListenForInput();
@@ -24,9 +41,12 @@ namespace A1 {
 
             if (timePassFromLastInput >= 0.3f)
             {
-                ProcessInput();
+                AIProcessingMovement();
+
+                //ProcessInput();
             }
         }
+
         // [ ] Provide Method structure but let them fill in body. 
         private void ListenForInput() {
 
@@ -81,19 +101,45 @@ namespace A1 {
             }
 
         }
+        private void AIProcessingMovement()
+        {
+            if (winPointPos != new Vector2Int(currentPosX,currentPosY))
+            {
+                List<AStarNode> nodes = aStar.pathFinding(new Vector2Int(currentPosX, currentPosY), winPointPos);
+                if (nodes.Count != 0)
+                {
+                    nodes.Reverse();
+                    if (nodes.Count - 1 != 0)
+                    {
+                        nodes.RemoveAt(0);
+                    }
+                    ValidateMove(nodes[0].pos.x, nodes[0].pos.y);
+                    SetPlayerPosition(nodes[0].pos.x, nodes[0].pos.y);
+                    timePassFromLastInput = 0;
+                }
+
+            }
+            else
+            {
+                string currentSceneName = SceneManager.GetActiveScene().name;
+                SceneManager.LoadScene(currentSceneName);
+            }
+        } 
 
         // You've converted the input into a target position, make sure that position is valid on the Grid. 
         private bool ValidateMove(int xTargetPosition, int yTargetPosition) 
         {
-            bool isValid = grid.IsAWallTile(xTargetPosition, yTargetPosition);
+            bool isValid = true;
 
-            if (!isValid)
+            if (grid.IsAWallTile(xTargetPosition, yTargetPosition))
             {
                 StartCoroutine(InvalidMoveIndicator());
+                isValid = false;
             }
             else 
             {
                 StartCoroutine(validMoveIndicator());
+                isValid = true;
             }
 
             return isValid;
@@ -153,6 +199,84 @@ namespace A1 {
             yield return null;
 
         }
+
+        //public List<AStarNode> pathFinding(Vector2Int startingNode, Vector2Int endNode)
+        //{
+        //    //GridTile[,] noWallGrid = RemoveWallPositions(grid);
+
+        //    List<AStarNode> notSearchNodes = new List<AStarNode>();
+        //    notSearchNodes.Add(new AStarNode(null, startingNode, endNode, startingNode));
+        //    List<AStarNode> searchedNodes = new List<AStarNode>();
+
+        //    AStarNode currentnode = notSearchNodes.First();
+
+        //    while (notSearchNodes.Count > 0)
+        //    {
+        //        if (!ValidateMove(endNode.x, endNode.y))
+        //        {
+        //            break;
+        //        }
+
+        //        List<AStarNode> neighbors = GetNeighbors(currentnode, endNode);
+
+        //        foreach (AStarNode neighbor in neighbors) 
+        //        {
+        //            if (!searchedNodes.Any(x => x.pos == neighbor.pos))
+        //            {
+        //                notSearchNodes.Add(neighbor);
+        //            }
+        //        }
+
+        //        if (neighbors.Count == 0)
+        //        {
+        //            break;
+        //        }
+
+        //        currentnode = notSearchNodes.OrderBy(x => x.f).FirstOrDefault();
+
+        //        notSearchNodes.Remove(currentnode);
+
+        //        searchedNodes.Add(currentnode);
+
+        //        if (currentnode.pos == endNode)
+        //        {
+        //            Debug.Log("Done");
+        //            List<AStarNode> parents = currentnode.GetAllParent();
+
+        //            parents.Reverse();
+        //            parents.Add(currentnode);
+        //            parents.Reverse();
+
+        //            Debug.Log(parents.Count);
+        //            foreach (AStarNode node in parents)
+        //            {
+        //                Debug.Log(node.pos);
+        //            }
+        //            return parents;
+        //        }
+        //    }
+        //    return new List<AStarNode>();
+
+        //}
+
+        //public List<AStarNode> GetNeighbors(AStarNode node , Vector2Int endNode)
+        //{
+        //    List<AStarNode> aStarNodes = new List<AStarNode>();
+
+        //    foreach (Vector2Int item in directions)
+        //    {
+        //        Vector2Int newPos = node.pos + item;
+
+        //        if (ValidateMove(newPos.x, newPos.y))
+        //        {
+        //            aStarNodes.Add(new AStarNode(node, newPos, endNode, newPos));
+        //        }
+        //    }
+        //    return aStarNodes;
+        //}
+
+
+
     }
 }
 

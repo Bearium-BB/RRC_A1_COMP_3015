@@ -15,6 +15,8 @@ namespace A1 {
 
         private bool isWall = false;
 
+        private bool isWinPoint = false;
+
         // Add Sprites Later
         /*
         public Sprite openSprite;
@@ -22,16 +24,17 @@ namespace A1 {
         */
 
         public bool IsAWall() { return isWall; } // Accessor for wall state. 
+        public bool IsAWinPoint() { return isWinPoint; } // Accessor for wall state. 
 
         public void Awake() {
             // This should never fail because we have the [Requires.. ] 
             _spriteRenderer = GetComponent<SpriteRenderer>();
         }
 
-        public void InitializeSelf(bool isWall) {
+        public void InitializeSelf(bool isWall, bool isWinPoint = false) {
             // Sets the art to match the state. Later we might expand this. 
             this.isWall = isWall;// Note the use of this keyword, which refers to the current object. 
-
+            this.isWinPoint = isWinPoint;
             // Otherwise, the isWall parameter would hide the class isWall parameter, and it would not get
             // updated when you try to set it in a very mysterious and hard to debug way. 
             UpdateArt();
@@ -39,10 +42,15 @@ namespace A1 {
 
         public void UpdateArt() {
             if (isWall) {
-                _spriteRenderer.color = new Color(1f, 94f / 255f, 0f);  // Note the use of Static class Color to store colors. 
-            } else {
+                _spriteRenderer.sprite = wall;
+            }
+            else if (isWinPoint)
+            {
+                _spriteRenderer.color = new Color(1f, 180f / 255f, 150f);
+            } 
+            else {
                 //_spriteRenderer.color = new Color(0f, 59f / 255f, 63f / 255f);
-                _spriteRenderer.sprite = floor;
+                _spriteRenderer.color = new Color(1f, 94f / 255f, 0f);
             }
         }
     }

@@ -237,6 +237,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Grid_V1
       objectReference: {fileID: 0}
+    - target: {fileID: 5659436764367552466, guid: 9d873efa4ffffe74f90ee4a9d17e9a55, type: 3}
+      propertyPath: DEBUG_MODE
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6458240903444771925, guid: 9d873efa4ffffe74f90ee4a9d17e9a55, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -345,6 +349,10 @@ PrefabInstance:
     - target: {fileID: 7104726645435656132, guid: d5751bed5cb63b341874f6e42c4ed422, type: 3}
       propertyPath: yStartTiles
       value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7104726645435656132, guid: d5751bed5cb63b341874f6e42c4ed422, type: 3}
+      propertyPath: wallProbability
+      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

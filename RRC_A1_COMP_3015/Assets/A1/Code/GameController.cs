@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using A1;
+using UnityEngine.SceneManagement;
 
 namespace A1 {
     public class GameController : MonoBehaviour {
@@ -21,13 +22,22 @@ namespace A1 {
         // Must be assigned in the scene first. 
         public Grid2D grid;
 
+        private AStar aStar = new AStar();
+
+
         public void Start() {
             // Create the Grid
-            grid.GenerateNewGrid_WithRandomWalls(xStartTiles, yStartTiles, wallProbability);
+            grid.GenerateNewGrid_Witch_RandomWalls_And_Win_Point(xStartTiles, yStartTiles, wallProbability);
             currentPlayer = Instantiate(thePlayer_Prefab);
             currentPlayer.SetGrid(grid);
-
-        }
+            aStar.SetGrid(grid);
+            List<AStarNode> aStarNodes = aStar.pathFinding(Vector2Int.zero, grid.GetWinPointPos());
+            if (aStarNodes.Count == 0)
+            {
+                string currentSceneName = SceneManager.GetActiveScene().name;
+                SceneManager.LoadScene(currentSceneName);
+            }
     }
+}
 }
 
