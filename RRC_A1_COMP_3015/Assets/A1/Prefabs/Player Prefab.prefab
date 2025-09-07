@@ -97,3 +97,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f4dfb1d8e147be42b0e829fedd2ff64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  aStarLogNodeInWord: {fileID: 2806630953987688608, guid: b34a7c199db02a944a0c9fa99ae89662, type: 3}

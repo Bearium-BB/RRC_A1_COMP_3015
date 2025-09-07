@@ -36,19 +36,19 @@ namespace A1 {
             grid.GenerateNewGrid_Witch_RandomWalls_And_Win_Point(xStartTiles, yStartTiles, wallProbability);
             currentPlayer = Instantiate(thePlayer_Prefab);
             float NPCX = Random.Range(0, 50);
-            float NPCY = Random.Range(0, 50); 
+            float NPCY = Random.Range(0, 50);
 
-            currentNPC = Instantiate(theNPC_Prefab,new Vector2(NPCX, NPCY),Quaternion.identity);
-            currentNPC.currentPosX = (int)NPCX;
-            currentNPC.currentPosY = (int)NPCY;
+            //currentNPC = Instantiate(theNPC_Prefab, new Vector2(NPCX, NPCY), Quaternion.identity);
+            //currentNPC.currentPosX = (int)NPCX;
+            //currentNPC.currentPosY = (int)NPCY;
 
             currentPlayer.SetGrid(grid);
-            currentNPC.SetGrid(grid);
+            //currentNPC.SetGrid(grid);
             aStar.SetGrid(grid);
 
-            currentNPC.winPointPos =  currentPlayer.transform;
+            //currentNPC.winPointPos = currentPlayer.transform;
 
-            List<AStarNode> aStarNodes = aStar.pathFinding(Vector2Int.zero, grid.GetWinPointPos());
+            List<AStarNode> aStarNodes = aStar.PathFinding(Vector2Int.zero, grid.GetWinPointPos());
             if (aStarNodes.Count == 0)
             {
                 try
@@ -63,10 +63,17 @@ namespace A1 {
 
             }
 
+
         }
         public void Update() 
         {
             cam.position = new Vector3(currentPlayer.transform.position.x, currentPlayer.transform.position.y,cam.position.z);
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                string currentSceneName = SceneManager.GetActiveScene().name;
+                SceneManager.LoadScene(currentSceneName);
+            }
         }
     }
 }

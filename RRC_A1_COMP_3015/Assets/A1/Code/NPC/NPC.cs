@@ -35,16 +35,14 @@ public class NPC : MonoBehaviour
 
     private void AIProcessingMovement()
     {
+        Debug.Log("AIProcessingMovement");
         if (new Vector2Int((int)winPointPos.position.x, (int)winPointPos.position.y) != new Vector2Int(currentPosX, currentPosY))
         {
-            List<AStarNode> nodes = aStar.pathFinding(new Vector2Int(currentPosX, currentPosY), new Vector2Int((int)winPointPos.position.x, (int)winPointPos.position.y));
+            List<AStarNode> nodes = aStar.PathFinding(new Vector2Int(currentPosX, currentPosY), new Vector2Int((int)winPointPos.position.x, (int)winPointPos.position.y));
             if (nodes.Count != 0)
             {
                 nodes.Reverse();
-                if (nodes.Count - 1 != 0)
-                {
-                    nodes.RemoveAt(0);
-                }
+
                 ValidateMove(nodes[0].pos.x, nodes[0].pos.y);
                 SetPlayerPosition(nodes[0].pos.x, nodes[0].pos.y);
                 timePassFromLastInput = 0;

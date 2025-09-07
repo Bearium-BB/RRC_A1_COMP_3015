@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.PlasticSCM.Editor.WebApi;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -39,44 +38,50 @@ public class AStarNode
 
     public void CalculateGCost()
     {
-        AStarNode currentParent = parent;
-        AStarNode oldParent = new AStarNode();
+        AStarNode currentParent = this;
+        // We can use a HashSet here because we’re not creating new objects, 
+        // we’re reusing existing ones. This way, the HashSet will recognize 
+        // duplicates when they’re added.
+        HashSet<AStarNode> visited = new HashSet<AStarNode>();
 
         int countParents = 0;
         while (currentParent != null)
         {
-            currentParent = currentParent.parent;
-            if (oldParent == currentParent)
+            if (!visited.Add(currentParent))
             {
                 break;
             }
-            if (currentParent != null)
-            {
-                oldParent = currentParent.parent;
-
-            }
             countParents++;
+            currentParent = currentParent.parent;
+
         }
         g = countParents;
     }
 
-
+    // Using 'this.parent' here can be dangerous because you might accidentally grab a different object 
+    // instead of the current one. I figured this out when I ran into an issue where the last node 
+    // adjacent to it was never included, and the path skipped straight to the end. 
+    // The problem was that I used 'parent' instead of 'this', which started the chain from the 
+    // node’s parent instead of from the node itself.
+    
     public List<AStarNode> GetAllParent()
     {
-        AStarNode currentParent = parent;
-        AStarNode oldParent = new AStarNode();
-        List <AStarNode> parents = new List <AStarNode>();
+        AStarNode currentParent = this;
+        HashSet<AStarNode> visited = new HashSet<AStarNode>();
+        List<AStarNode> parents = new List<AStarNode> { this };
 
         while (currentParent != null)
         {
-            currentParent = currentParent.parent;
 
+            if (!visited.Add(currentParent))
+            {
+                break;
+            }
+            currentParent = currentParent.parent;
             if (currentParent == null)
             {
                 break;
             }
-            oldParent = currentParent.parent;
-
             parents.Add(currentParent);
         }
 
