@@ -25,9 +25,9 @@ namespace A1 {
         private AStar aStar = new AStar();
         private Vector2Int winPointPos;
 
-        public GameObject aStarLogNodeInWord;
-        List<GameObject> aStarList = new List<GameObject>();
-        public List<AStarNode> aStarNodes = new List<AStarNode>();
+        //public GameObject aStarLogNodeInWord;
+        //List<GameObject> aStarList = new List<GameObject>();
+        //public List<AStarNode> aStarNodes = new List<AStarNode>();
         // --- Input  --- 
 
         public void Start()
@@ -109,29 +109,29 @@ namespace A1 {
             if (winPointPos != new Vector2Int(currentPosX,currentPosY))
             {
                 List<AStarNode> nodes = aStar.PathFinding(new Vector2Int(currentPosX, currentPosY), winPointPos);
-                aStarNodes = nodes;
+                //aStarNodes = nodes;
                 if (nodes.Count != 0)
                 {
                     nodes.Reverse();
 
-                    foreach (GameObject obj in aStarList)
-                    {
-                        if (obj != null)
-                        {
-                            Destroy(obj);
-                        }
-                    }
-                    for(int i = 0; i < nodes.Count; i++)
-                    {
-                        GameObject obj = Instantiate(aStarLogNodeInWord, new Vector3(nodes[i].pos.x, nodes[i].pos.y,0), Quaternion.identity);
-                        aStarList.Add(obj);
-                        obj.GetComponent<AStarLogNodeInWord>().g.text = nodes[i].g.ToString();
-                        obj.GetComponent<AStarLogNodeInWord>().h.text = nodes[i].h.ToString();
-                        obj.GetComponent<AStarLogNodeInWord>().f.text = nodes[i].f.ToString();
-                        obj.GetComponent<AStarLogNodeInWord>().pos.text = nodes[i].pos.ToString();
-                        obj.GetComponent<AStarLogNodeInWord>().index.text = i.ToString();
+                    //foreach (GameObject obj in aStarList)
+                    //{
+                    //    if (obj != null)
+                    //    {
+                    //        Destroy(obj);
+                    //    }
+                    //}
+                    //for(int i = 0; i < nodes.Count; i++)
+                    //{
+                    //    GameObject obj = Instantiate(aStarLogNodeInWord, new Vector3(nodes[i].pos.x, nodes[i].pos.y,0), Quaternion.identity);
+                    //    aStarList.Add(obj);
+                    //    obj.GetComponent<AStarLogNodeInWord>().g.text = nodes[i].g.ToString();
+                    //    obj.GetComponent<AStarLogNodeInWord>().h.text = nodes[i].h.ToString();
+                    //    obj.GetComponent<AStarLogNodeInWord>().f.text = nodes[i].f.ToString();
+                    //    obj.GetComponent<AStarLogNodeInWord>().pos.text = nodes[i].pos.ToString();
+                    //    obj.GetComponent<AStarLogNodeInWord>().index.text = i.ToString();
 
-                    }
+                    //}
 
                     ValidateMove(nodes[0].pos.x, nodes[0].pos.y);
                     SetPlayerPosition(nodes[0].pos.x, nodes[0].pos.y);

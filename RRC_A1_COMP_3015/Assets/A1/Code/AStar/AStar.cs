@@ -28,7 +28,6 @@ public class AStar
     }
     public List<AStarNode> PathFinding(Vector2Int startingNode, Vector2Int endNode)
     {
-        Debug.Log("PathFinding");
         try
         {
             List<AStarNode> notSearchNodes = new List<AStarNode>();
@@ -116,8 +115,6 @@ public class AStar
                 }
 
             }
-            Debug.Log("No Path");
-
             return new List<AStarNode>();
 
         }
