@@ -40,14 +40,15 @@ namespace A1 {
             grid.GenerateNewGrid_Witch_RandomWalls_And_Win_Point(xStartTiles, yStartTiles, wallProbability);
 
             currentPlayer = Instantiate(thePlayer_Prefab);
-            float NPCX = Random.Range(0, 50);
-            float NPCY = Random.Range(0, 50);
+            float NPCX = Random.Range(0, xStartTiles);
+            float NPCY = Random.Range(0, yStartTiles);
 
             currentNPC = Instantiate(theNPC_Prefab, new Vector2(NPCX, NPCY), Quaternion.identity);
             currentNPC.currentPosX = (int)NPCX;
             currentNPC.currentPosY = (int)NPCY;
 
             currentPlayer.SetGrid(grid);
+            currentPlayer.transformNPC = currentNPC.transform;
             currentNPC.SetGrid(grid);
             aStar.SetGrid(grid);
 
@@ -65,24 +66,26 @@ namespace A1 {
         {
             turnTimer += Time.deltaTime;
 
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-
-            }
-
-
             if (turnTimer >= 0.5f)
             {
                 turnDecider = !turnDecider;
                 if (turnDecider)
                 {
-
+                    currentPlayer.WhatToDO();
                 }
                 else
                 {
-
+                    List<AStarNode> aStarNodes = aStar.PathFinding(currentNPC.GetPosition(), currentPlayer.GetPosition());
+                    aStarNodes.Reverse();
+                    currentNPC.MoveAgent(aStarNodes[0]);
                 }
                 turnTimer = 0;
+            }
+
+            if (currentPlayer.GetPosition() == grid.GetWinPointPos())
+            {
+                string currentSceneName = SceneManager.GetActiveScene().name;
+                SceneManager.LoadScene(currentSceneName);
             }
         }
 
@@ -90,19 +93,6 @@ namespace A1 {
         {
             cam.position = new Vector3(currentPlayer.transform.position.x, currentPlayer.transform.position.y, cam.position.z);
         }
-
-        //void FollowPath(Vector2Int start, Vector2Int end , AbleToPathfind ableToPathfind)
-        //{
-        //    List<AStarNode> path = aStar.PathFinding(start, end);
-        //    ableToPathfind.MoveAgent(path);
-
-        //}
-        //void OneIncrementOnPath (Vector2Int start, Vector2Int end, AbleToPathfind ableToPathfind)
-        //{
-        //    List<AStarNode> path = aStar.PathFinding(start, end);
-        //    ableToPathfind.MoveAgent(path[path.Count-1]);
-
-        //}
     }
 }
 

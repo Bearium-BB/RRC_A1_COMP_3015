@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4018195986104465782}
   - component: {fileID: 8071941532605458291}
-  - component: {fileID: 5962979258151219163}
-  - component: {fileID: 2868015661888582100}
   - component: {fileID: -7666684877869733811}
+  - component: {fileID: 5962979258151219163}
+  - component: {fileID: 1211990691011204652}
   m_Layer: 7
   m_Name: Player Prefab
   m_TagString: Player
@@ -87,47 +87,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &5962979258151219163
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4337306432145070404}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f4dfb1d8e147be42b0e829fedd2ff64, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  aStarLogNodeInWordGameObject: {fileID: 2806630953987688608, guid: b34a7c199db02a944a0c9fa99ae89662, type: 3}
---- !u!114 &2868015661888582100
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4337306432145070404}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03a0fedc9deb81e4da97596e10efe1a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onHit:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5962979258151219163}
-        m_TargetAssemblyTypeName: A1.Player, Assembly-CSharp
-        m_MethodName: SeeNPC
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  offSet: 0.53
 --- !u!61 &-7666684877869733811
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -173,3 +132,59 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &5962979258151219163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4337306432145070404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f4dfb1d8e147be42b0e829fedd2ff64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  aStarLogNodeInWordGameObject: {fileID: 2806630953987688608, guid: b34a7c199db02a944a0c9fa99ae89662, type: 3}
+  transformNPC: {fileID: 0}
+  onSeeNPC:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1211990691011204652}
+        m_TargetAssemblyTypeName: MoverAStartAction, Assembly-CSharp
+        m_MethodName: MoveAgentStep
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: MoveAgentTimer
+          m_BoolArgument: 0
+        m_CallState: 2
+  notSeeNPC:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1211990691011204652}
+        m_TargetAssemblyTypeName: MoverAStartAction, Assembly-CSharp
+        m_MethodName: MoveAgentStep
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1211990691011204652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4337306432145070404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf4148f7b78bd23428730968039a0abf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

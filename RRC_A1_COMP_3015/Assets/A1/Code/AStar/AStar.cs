@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using UnityEditor.Callbacks;
 using UnityEngine;
-using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public class AStar
 {
@@ -26,10 +25,9 @@ public class AStar
     {
         this.grid = grid;
     }
-    public List<AStarNode> PathFinding(Vector2Int startingNode, Vector2Int endNode)
+
+    public List<AStarNode> PathFinding(Vector2Int startingNode, Vector2Int endNode , List<Vector2Int> movingWall = null)
     {
-        try
-        {
             List<AStarNode> notSearchNodes = new List<AStarNode>();
             notSearchNodes.Add(new AStarNode(null, startingNode, endNode, startingNode));
             List<AStarNode> searchedNodes = new List<AStarNode>();
@@ -50,7 +48,7 @@ public class AStar
                 }
 
 
-                List<AStarNode> neighbors = GetNeighbors(currentnode, endNode);
+                List<AStarNode> neighbors = GetNeighbors(currentnode, endNode, movingWall);
 
                 foreach (AStarNode neighbor in neighbors)
                 {
@@ -115,17 +113,11 @@ public class AStar
             }
             return new List<AStarNode>();
 
-        }
-        catch (Exception e)
-        {
-            Debug.LogError(e);
-            return new List<AStarNode>();        
-        }
 
 
     }
 
-    public List<AStarNode> GetNeighbors(AStarNode node, Vector2Int endNode)
+    public List<AStarNode> GetNeighbors(AStarNode node, Vector2Int endNode , List<Vector2Int> movingWall = null)
     {
         List<AStarNode> aStarNodes = new List<AStarNode>();
 
@@ -137,7 +129,21 @@ public class AStar
 
                 if (ValidateMove(newPos.x, newPos.y))
                 {
-                    aStarNodes.Add(new AStarNode(node, newPos, endNode, newPos));
+                    Debug.Log(movingWall);
+
+                    if (movingWall != null)
+                    {
+                        Debug.Log(movingWall.Count);
+                        if (!movingWall.Contains(newPos))
+                        {
+                            aStarNodes.Add(new AStarNode(node, newPos, endNode, newPos));
+                        }
+                    }
+                    else
+                    {
+                        aStarNodes.Add(new AStarNode(node, newPos, endNode, newPos));
+
+                    }
                 }
             }
         }

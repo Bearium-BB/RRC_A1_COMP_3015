@@ -20,41 +20,6 @@ public class NPC : MonoBehaviour , AbleToPathfind
 
     }
 
-    public void Update()
-    {
-        Physics.SyncTransforms();
-    }
-
-    //private void AIProcessingMovement()
-    //{
-    //    Debug.Log("AIProcessingMovement");
-    //    if (new Vector2Int((int)winPointPos.position.x, (int)winPointPos.position.y) != new Vector2Int(currentPosX, currentPosY))
-    //    {
-    //        List<AStarNode> nodes = aStar.PathFinding(new Vector2Int(currentPosX, currentPosY), new Vector2Int((int)winPointPos.position.x, (int)winPointPos.position.y));
-    //        if (nodes.Count != 0)
-    //        {
-    //            nodes.Reverse();
-
-    //            ValidateMove(nodes[0].pos.x, nodes[0].pos.y);
-    //            SetPosition(nodes[0].pos.x, nodes[0].pos.y);
-    //            timePassFromLastInput = 0;
-    //        }
-
-    //    }
-    //    else
-    //    {
-    //        try
-    //        {
-    //            string currentSceneName = SceneManager.GetActiveScene().name;
-    //            SceneManager.LoadScene(currentSceneName);
-    //        }
-    //        catch (Exception e)
-    //        {
-    //            Debug.LogError(e);
-    //        }
-    //    }
-    //}
-
     private bool ValidateMove(int xTargetPosition, int yTargetPosition)
     {
         bool isValid = true;
@@ -129,32 +94,20 @@ public class NPC : MonoBehaviour , AbleToPathfind
 
     }
 
-    public async void MoveAgent(List<AStarNode> aStarNodes)
+    public void MoveAgent(List<AStarNode> aStarNodes)
     {
         aStarNodes.Reverse();
 
         for (int i = 0; i < aStarNodes.Count; i++)
         {
-            await Timer(0.3f, () => SetPosition(aStarNodes[i].pos.x, aStarNodes[i].pos.y));
+            SetPosition(aStarNodes[i].pos.x, aStarNodes[i].pos.y);
         }
 
     }
 
-    public async void MoveAgent(AStarNode aStarNodes)
+    public void MoveAgent(AStarNode aStarNode)
     {
-        await Timer(0.3f, () => SetPosition(aStarNodes.pos.x, aStarNodes.pos.y));
-    }
-
-    public async Task Timer(float duration, Action action)
-    {
-        float timeElapsed = 0f;
-        while (timeElapsed < duration)
-        {
-            timeElapsed += Time.deltaTime;
-            await Task.Yield();
-        }
-
-        action?.Invoke();
+        SetPosition(aStarNode.pos.x, aStarNode.pos.y);
     }
 
 }

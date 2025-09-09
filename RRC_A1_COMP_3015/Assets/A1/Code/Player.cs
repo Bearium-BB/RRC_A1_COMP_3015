@@ -1,15 +1,16 @@
-using UnityEngine;
 using A1;
-using System.Threading;
-using System.ComponentModel;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
-using Unity.VisualScripting;
-using System;
-using UnityEngine.SceneManagement;
-using UnityEditor.Experimental.GraphView;
+using System.Threading;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 namespace A1 {
 
@@ -24,6 +25,13 @@ namespace A1 {
         private float timePassFromLastInput;
 
         public GameObject aStarLogNodeInWordGameObject;
+
+        public Transform transformNPC;
+
+        public UnityEvent<MoverAStartModels> onSeeNPC;
+        public UnityEvent<MoverAStartModels> notSeeNPC;
+
+        bool seeNPC;
         // --- Input  --- 
 
         public void Update() {
@@ -35,7 +43,16 @@ namespace A1 {
             {
                 ProcessInput();
             }
-            Physics.SyncTransforms();
+
+            if (HowCloseIsNPC() <= 30f)
+            {
+                seeNPC = true;
+            }
+            else
+            {
+                seeNPC = false;
+            }
+
         }
 
         // [ ] Provide Method structure but let them fill in body. 
@@ -51,43 +68,38 @@ namespace A1 {
         // Note: You should only have one move at a time here. 
         private void ProcessInput() {
             // [ ] Convert Input into the X and Y values of the position we are trying to move to on the grid.
-            Vector3Int movementVector = Vector3Int.zero;
+            Vector2Int movementVector = Vector2Int.zero;
             if (Input.GetKeyDown(KeyCode.W))
             {
+                movementVector = new Vector2Int(currentPosX, currentPosY + 1);
 
-                movementVector = new Vector3Int(currentPosX, currentPosY + 1);
-                if (ValidateMove(movementVector.x, movementVector.y))
-                {
-                    SetPosition(movementVector.x, movementVector.y);
-                }
+                Mover(movementVector);
+
                 timePassFromLastInput = 0;
             }
             if (Input.GetKeyDown(KeyCode.S))
             {
-                movementVector = new Vector3Int(currentPosX, currentPosY - 1);
-                if (ValidateMove(movementVector.x, movementVector.y))
-                {
-                    SetPosition(movementVector.x, movementVector.y);
-                }
+                movementVector = new Vector2Int(currentPosX, currentPosY - 1);
+
+                Mover(movementVector);
+
                 timePassFromLastInput = 0;
             }
             if (Input.GetKeyDown(KeyCode.A))
             {
-                movementVector = new Vector3Int(currentPosX - 1, currentPosY);
-                if (ValidateMove(movementVector.x, movementVector.y))
-                {
-                    SetPosition(movementVector.x, movementVector.y);
-                }
+                movementVector = new Vector2Int(currentPosX - 1, currentPosY);
+
+                Mover(movementVector);
+
                 timePassFromLastInput = 0;
 
             }
             if (Input.GetKeyDown(KeyCode.D))
             {
-                movementVector = new Vector3Int(currentPosX + 1, currentPosY);
-                if (ValidateMove(movementVector.x, movementVector.y))
-                {
-                    SetPosition(movementVector.x, movementVector.y);
-                }
+                movementVector = new Vector2Int(currentPosX + 1, currentPosY);
+
+                Mover(movementVector);
+
                 timePassFromLastInput = 0;
             }
 
@@ -112,6 +124,14 @@ namespace A1 {
             return isValid;
         }
 
+        public void Mover(Vector2Int movementVector)
+        {
+            if (ValidateMove(movementVector.x, movementVector.y))
+            {
+                SetPosition(movementVector.x, movementVector.y);
+            }
+        }
+
         // Sets the position of the Player in the Game world, and updates the local ints. 
         public void SetPosition(int xTargetPosition, int yTargetPosition)
         {
@@ -129,6 +149,11 @@ namespace A1 {
         // Supplied Methods: 
         public void SetGrid(Grid2D newGrid) {
             grid = newGrid;
+        }
+
+        public Grid2D GetGrid()
+        {
+            return grid;
         }
 
         // Add for testing
@@ -173,26 +198,50 @@ namespace A1 {
 
         }
 
-        public async Task Timer(float duration, Action action)
-        {
-            float timeElapsed = 0f;
-            while (timeElapsed < duration)
-            {
-                timeElapsed += Time.deltaTime;
-                await Task.Yield();
-            }
 
-            action?.Invoke();
+        public void SeeNPCAction()
+        {
+
+            List<Vector2Int> movingWall = new List<Vector2Int> { new Vector2Int((int)transformNPC.position.x, (int)transformNPC.position.y) };
+            List<Vector2Int> directions = new List<Vector2Int> { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+
+            foreach (Vector2Int direction in directions)
+            {
+                movingWall.Add(movingWall[0] + direction);
+  
+            }
+            Debug.Log(movingWall.Count);
+            MoverAStartModels moverAStartModels = new MoverAStartModels(this, new Vector2Int(currentPosX, currentPosY), grid.GetWinPointPos(), movingWall);
+
+            onSeeNPC.Invoke(moverAStartModels);
+            
         }
 
-        public void SeeNPC(RaycastHit2D hit)
+        public void GoToWinPoint()
         {
-            Vector3 opposingDirectionForNPC = (transform.position - hit.collider.transform.position).normalized;
-            if (hit.collider.tag == "NPC")
+            MoverAStartModels moverAStartModels = new MoverAStartModels(this, new Vector2Int(currentPosX, currentPosY), grid.GetWinPointPos());
+            notSeeNPC.Invoke(moverAStartModels);
+        }
+
+        public void WhatToDO()
+        {
+            if (!seeNPC)
             {
-                Debug.Log(opposingDirectionForNPC);
+                GoToWinPoint();
+            }
+            else 
+            {
+                Debug.Log("hi");
+                SeeNPCAction();
             }
         }
+
+        public float HowCloseIsNPC()
+        {
+            return Vector2.Distance(transformNPC.position, transform.position);
+        }
+
+
     }
 }
 
