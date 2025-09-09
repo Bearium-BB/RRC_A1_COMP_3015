@@ -35,6 +35,7 @@ namespace A1 {
             {
                 ProcessInput();
             }
+            Physics.SyncTransforms();
         }
 
         // [ ] Provide Method structure but let them fill in body. 
@@ -172,47 +173,6 @@ namespace A1 {
 
         }
 
-        public async void MoveAgent(List<AStarNode> aStarNodes)
-        {
-
-            //List<GameObject> aStarLogNodeInWordGameObjectList = new List<GameObject>();
-            aStarNodes.Reverse();
-
-            //for (int i = 0; i < aStarNodes.Count; i++)
-            //{
-            //    GameObject obj = Instantiate(aStarLogNodeInWordGameObject, new Vector3(aStarNodes[i].pos.x, aStarNodes[i].pos.y, 0), Quaternion.identity);
-            //    aStarLogNodeInWordGameObjectList.Add(obj);
-
-            //    AStarLogNodeInWord aStarLogNodeInWord = obj.GetComponent<AStarLogNodeInWord>();
-
-            //    aStarLogNodeInWord.g.text = aStarNodes[i].g.ToString();
-            //    aStarLogNodeInWord.h.text = aStarNodes[i].h.ToString();
-            //    aStarLogNodeInWord.f.text = aStarNodes[i].f.ToString();
-            //    aStarLogNodeInWord.pos.text = aStarNodes[i].pos.ToString();
-            //    aStarLogNodeInWord.index.text = i.ToString();
-
-            //}
-
-            for (int i = 0; i < aStarNodes.Count; i++)
-            {
-               await Timer(0.3f, () => SetPosition(aStarNodes[i].pos.x, aStarNodes[i].pos.y));
-            }
-
-            //foreach (GameObject obj in aStarLogNodeInWordGameObjectList)
-            //{
-            //    if (obj != null)
-            //    {
-            //        Destroy(obj);
-            //    }
-            //}
-        }
-
-
-        public void MoveAgent(AStarNode aStarNodes)
-        {
-            SetPosition(aStarNodes.pos.x, aStarNodes.pos.y);
-        }
-
         public async Task Timer(float duration, Action action)
         {
             float timeElapsed = 0f;
@@ -227,7 +187,11 @@ namespace A1 {
 
         public void SeeNPC(RaycastHit2D hit)
         {
-
+            Vector3 opposingDirectionForNPC = -(transform.position - hit.collider.transform.position).normalized;
+            if (hit.collider.tag == "NPC")
+            {
+                Debug.Log(opposingDirectionForNPC);
+            }
         }
     }
 }

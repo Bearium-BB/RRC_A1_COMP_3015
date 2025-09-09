@@ -22,7 +22,7 @@ public class NPC : MonoBehaviour , AbleToPathfind
 
     public void Update()
     {
-
+        Physics.SyncTransforms();
     }
 
     //private void AIProcessingMovement()
