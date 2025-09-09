@@ -2,10 +2,11 @@ using A1;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class NPC : MonoBehaviour
+public class NPC : MonoBehaviour , AbleToPathfind
 {
     private Grid2D grid;
 
@@ -13,55 +14,46 @@ public class NPC : MonoBehaviour
     public int currentPosY;
     private float timePassFromLastInput;
 
-    private AStar aStar = new AStar();
-    public Transform winPointPos;
-
 
     public void Start()
     {
-        aStar.SetGrid(grid);
+
     }
 
     public void Update()
     {
-        timePassFromLastInput += Time.deltaTime;
 
-        if (timePassFromLastInput >= 0.3f)
-        {
-            AIProcessingMovement();
-
-        }
     }
 
-    private void AIProcessingMovement()
-    {
-        Debug.Log("AIProcessingMovement");
-        if (new Vector2Int((int)winPointPos.position.x, (int)winPointPos.position.y) != new Vector2Int(currentPosX, currentPosY))
-        {
-            List<AStarNode> nodes = aStar.PathFinding(new Vector2Int(currentPosX, currentPosY), new Vector2Int((int)winPointPos.position.x, (int)winPointPos.position.y));
-            if (nodes.Count != 0)
-            {
-                nodes.Reverse();
+    //private void AIProcessingMovement()
+    //{
+    //    Debug.Log("AIProcessingMovement");
+    //    if (new Vector2Int((int)winPointPos.position.x, (int)winPointPos.position.y) != new Vector2Int(currentPosX, currentPosY))
+    //    {
+    //        List<AStarNode> nodes = aStar.PathFinding(new Vector2Int(currentPosX, currentPosY), new Vector2Int((int)winPointPos.position.x, (int)winPointPos.position.y));
+    //        if (nodes.Count != 0)
+    //        {
+    //            nodes.Reverse();
 
-                ValidateMove(nodes[0].pos.x, nodes[0].pos.y);
-                SetPlayerPosition(nodes[0].pos.x, nodes[0].pos.y);
-                timePassFromLastInput = 0;
-            }
+    //            ValidateMove(nodes[0].pos.x, nodes[0].pos.y);
+    //            SetPosition(nodes[0].pos.x, nodes[0].pos.y);
+    //            timePassFromLastInput = 0;
+    //        }
 
-        }
-        else
-        {
-            try
-            {
-                string currentSceneName = SceneManager.GetActiveScene().name;
-                SceneManager.LoadScene(currentSceneName);
-            }
-            catch (Exception e)
-            {
-                Debug.LogError(e);
-            }
-        }
-    }
+    //    }
+    //    else
+    //    {
+    //        try
+    //        {
+    //            string currentSceneName = SceneManager.GetActiveScene().name;
+    //            SceneManager.LoadScene(currentSceneName);
+    //        }
+    //        catch (Exception e)
+    //        {
+    //            Debug.LogError(e);
+    //        }
+    //    }
+    //}
 
     private bool ValidateMove(int xTargetPosition, int yTargetPosition)
     {
@@ -81,11 +73,15 @@ public class NPC : MonoBehaviour
         return isValid;
     }
 
-    public void SetPlayerPosition(int xTargetPosition, int yTargetPosition)
+    public void SetPosition(int xTargetPosition, int yTargetPosition)
     {
         currentPosX = xTargetPosition;
         currentPosY = yTargetPosition;
         transform.position = new Vector3(xTargetPosition, yTargetPosition, 0);
+    }
+    public Vector2Int GetPosition()
+    {
+        return new Vector2Int(currentPosX, currentPosY);
     }
 
     public void SetGrid(Grid2D newGrid)
@@ -132,4 +128,33 @@ public class NPC : MonoBehaviour
         yield return null;
 
     }
+
+    public async void MoveAgent(List<AStarNode> aStarNodes)
+    {
+        aStarNodes.Reverse();
+
+        for (int i = 0; i < aStarNodes.Count; i++)
+        {
+            await Timer(0.3f, () => SetPosition(aStarNodes[i].pos.x, aStarNodes[i].pos.y));
+        }
+
+    }
+
+    public async void MoveAgent(AStarNode aStarNodes)
+    {
+        await Timer(0.3f, () => SetPosition(aStarNodes.pos.x, aStarNodes.pos.y));
+    }
+
+    public async Task Timer(float duration, Action action)
+    {
+        float timeElapsed = 0f;
+        while (timeElapsed < duration)
+        {
+            timeElapsed += Time.deltaTime;
+            await Task.Yield();
+        }
+
+        action?.Invoke();
+    }
+
 }

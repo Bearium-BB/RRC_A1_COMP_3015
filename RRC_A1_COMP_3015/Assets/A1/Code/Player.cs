@@ -9,11 +9,12 @@ using Unity.VisualScripting;
 using System;
 using UnityEngine.SceneManagement;
 using UnityEditor.Experimental.GraphView;
+using System.Threading.Tasks;
 
 namespace A1 {
 
 
-    public class Player : MonoBehaviour {
+    public class Player : MonoBehaviour{
 
         // Object References
         private Grid2D grid;
@@ -22,19 +23,8 @@ namespace A1 {
         private int currentPosY;
         private float timePassFromLastInput;
 
-        private AStar aStar = new AStar();
-        private Vector2Int winPointPos;
-
-        //public GameObject aStarLogNodeInWord;
-        //List<GameObject> aStarList = new List<GameObject>();
-        //public List<AStarNode> aStarNodes = new List<AStarNode>();
+        public GameObject aStarLogNodeInWordGameObject;
         // --- Input  --- 
-
-        public void Start()
-        {
-            aStar.SetGrid(grid);
-            winPointPos = grid.GetWinPointPos();
-        }
 
         public void Update() {
             ListenForInput();
@@ -43,9 +33,7 @@ namespace A1 {
 
             if (timePassFromLastInput >= 0.3f)
             {
-                AIProcessingMovement();
-
-                //ProcessInput();
+                ProcessInput();
             }
         }
 
@@ -69,7 +57,7 @@ namespace A1 {
                 movementVector = new Vector3Int(currentPosX, currentPosY + 1);
                 if (ValidateMove(movementVector.x, movementVector.y))
                 {
-                    SetPlayerPosition(movementVector.x, movementVector.y);
+                    SetPosition(movementVector.x, movementVector.y);
                 }
                 timePassFromLastInput = 0;
             }
@@ -78,7 +66,7 @@ namespace A1 {
                 movementVector = new Vector3Int(currentPosX, currentPosY - 1);
                 if (ValidateMove(movementVector.x, movementVector.y))
                 {
-                    SetPlayerPosition(movementVector.x, movementVector.y);
+                    SetPosition(movementVector.x, movementVector.y);
                 }
                 timePassFromLastInput = 0;
             }
@@ -87,7 +75,7 @@ namespace A1 {
                 movementVector = new Vector3Int(currentPosX - 1, currentPosY);
                 if (ValidateMove(movementVector.x, movementVector.y))
                 {
-                    SetPlayerPosition(movementVector.x, movementVector.y);
+                    SetPosition(movementVector.x, movementVector.y);
                 }
                 timePassFromLastInput = 0;
 
@@ -97,60 +85,11 @@ namespace A1 {
                 movementVector = new Vector3Int(currentPosX + 1, currentPosY);
                 if (ValidateMove(movementVector.x, movementVector.y))
                 {
-                    SetPlayerPosition(movementVector.x, movementVector.y);
+                    SetPosition(movementVector.x, movementVector.y);
                 }
                 timePassFromLastInput = 0;
             }
 
-        }
-        private void AIProcessingMovement()
-        {
-            Debug.Log("AIProcessingMovement");
-            if (winPointPos != new Vector2Int(currentPosX,currentPosY))
-            {
-                List<AStarNode> nodes = aStar.PathFinding(new Vector2Int(currentPosX, currentPosY), winPointPos);
-                //aStarNodes = nodes;
-                if (nodes.Count != 0)
-                {
-                    nodes.Reverse();
-
-                    //foreach (GameObject obj in aStarList)
-                    //{
-                    //    if (obj != null)
-                    //    {
-                    //        Destroy(obj);
-                    //    }
-                    //}
-                    //for(int i = 0; i < nodes.Count; i++)
-                    //{
-                    //    GameObject obj = Instantiate(aStarLogNodeInWord, new Vector3(nodes[i].pos.x, nodes[i].pos.y,0), Quaternion.identity);
-                    //    aStarList.Add(obj);
-                    //    obj.GetComponent<AStarLogNodeInWord>().g.text = nodes[i].g.ToString();
-                    //    obj.GetComponent<AStarLogNodeInWord>().h.text = nodes[i].h.ToString();
-                    //    obj.GetComponent<AStarLogNodeInWord>().f.text = nodes[i].f.ToString();
-                    //    obj.GetComponent<AStarLogNodeInWord>().pos.text = nodes[i].pos.ToString();
-                    //    obj.GetComponent<AStarLogNodeInWord>().index.text = i.ToString();
-
-                    //}
-
-                    ValidateMove(nodes[0].pos.x, nodes[0].pos.y);
-                    SetPlayerPosition(nodes[0].pos.x, nodes[0].pos.y);
-                    timePassFromLastInput = 0;
-                }
-
-            }
-            else
-            {
-                try
-                {
-                    string currentSceneName = SceneManager.GetActiveScene().name;
-                    SceneManager.LoadScene(currentSceneName);
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError(e);
-                }
-            }
         } 
 
         // You've converted the input into a target position, make sure that position is valid on the Grid. 
@@ -173,12 +112,18 @@ namespace A1 {
         }
 
         // Sets the position of the Player in the Game world, and updates the local ints. 
-        public void SetPlayerPosition(int xTargetPosition, int yTargetPosition)
+        public void SetPosition(int xTargetPosition, int yTargetPosition)
         {
             currentPosX = xTargetPosition;
             currentPosY = yTargetPosition;
             transform.position = new Vector3(xTargetPosition, yTargetPosition, 0);
         }
+
+        public Vector2Int GetPosition()
+        {
+            return new Vector2Int(currentPosX, currentPosY);
+        }
+
 
         // Supplied Methods: 
         public void SetGrid(Grid2D newGrid) {
@@ -201,14 +146,14 @@ namespace A1 {
 
             if (spriteRenderer != null)
             {
-                spriteRenderer.color = Color.red;
+                transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
 
             }
             yield return new WaitForSeconds(0.25f);
 
             if (spriteRenderer != null)
             {
-                spriteRenderer.color = new Color(0f, 78f / 255f, 80f / 255f);
+                transform.localScale = new Vector3(1, 1, 1);
 
             }
 
@@ -227,83 +172,63 @@ namespace A1 {
 
         }
 
-        //public List<AStarNode> pathFinding(Vector2Int startingNode, Vector2Int endNode)
-        //{
-        //    //GridTile[,] noWallGrid = RemoveWallPositions(grid);
+        public async void MoveAgent(List<AStarNode> aStarNodes)
+        {
 
-        //    List<AStarNode> notSearchNodes = new List<AStarNode>();
-        //    notSearchNodes.Add(new AStarNode(null, startingNode, endNode, startingNode));
-        //    List<AStarNode> searchedNodes = new List<AStarNode>();
+            //List<GameObject> aStarLogNodeInWordGameObjectList = new List<GameObject>();
+            aStarNodes.Reverse();
 
-        //    AStarNode currentnode = notSearchNodes.First();
+            //for (int i = 0; i < aStarNodes.Count; i++)
+            //{
+            //    GameObject obj = Instantiate(aStarLogNodeInWordGameObject, new Vector3(aStarNodes[i].pos.x, aStarNodes[i].pos.y, 0), Quaternion.identity);
+            //    aStarLogNodeInWordGameObjectList.Add(obj);
 
-        //    while (notSearchNodes.Count > 0)
-        //    {
-        //        if (!ValidateMove(endNode.x, endNode.y))
-        //        {
-        //            break;
-        //        }
+            //    AStarLogNodeInWord aStarLogNodeInWord = obj.GetComponent<AStarLogNodeInWord>();
 
-        //        List<AStarNode> neighbors = GetNeighbors(currentnode, endNode);
+            //    aStarLogNodeInWord.g.text = aStarNodes[i].g.ToString();
+            //    aStarLogNodeInWord.h.text = aStarNodes[i].h.ToString();
+            //    aStarLogNodeInWord.f.text = aStarNodes[i].f.ToString();
+            //    aStarLogNodeInWord.pos.text = aStarNodes[i].pos.ToString();
+            //    aStarLogNodeInWord.index.text = i.ToString();
 
-        //        foreach (AStarNode neighbor in neighbors) 
-        //        {
-        //            if (!searchedNodes.Any(x => x.pos == neighbor.pos))
-        //            {
-        //                notSearchNodes.Add(neighbor);
-        //            }
-        //        }
+            //}
 
-        //        if (neighbors.Count == 0)
-        //        {
-        //            break;
-        //        }
+            for (int i = 0; i < aStarNodes.Count; i++)
+            {
+               await Timer(0.3f, () => SetPosition(aStarNodes[i].pos.x, aStarNodes[i].pos.y));
+            }
 
-        //        currentnode = notSearchNodes.OrderBy(x => x.f).FirstOrDefault();
-
-        //        notSearchNodes.Remove(currentnode);
-
-        //        searchedNodes.Add(currentnode);
-
-        //        if (currentnode.pos == endNode)
-        //        {
-        //            Debug.Log("Done");
-        //            List<AStarNode> parents = currentnode.GetAllParent();
-
-        //            parents.Reverse();
-        //            parents.Add(currentnode);
-        //            parents.Reverse();
-
-        //            Debug.Log(parents.Count);
-        //            foreach (AStarNode node in parents)
-        //            {
-        //                Debug.Log(node.pos);
-        //            }
-        //            return parents;
-        //        }
-        //    }
-        //    return new List<AStarNode>();
-
-        //}
-
-        //public List<AStarNode> GetNeighbors(AStarNode node , Vector2Int endNode)
-        //{
-        //    List<AStarNode> aStarNodes = new List<AStarNode>();
-
-        //    foreach (Vector2Int item in directions)
-        //    {
-        //        Vector2Int newPos = node.pos + item;
-
-        //        if (ValidateMove(newPos.x, newPos.y))
-        //        {
-        //            aStarNodes.Add(new AStarNode(node, newPos, endNode, newPos));
-        //        }
-        //    }
-        //    return aStarNodes;
-        //}
+            //foreach (GameObject obj in aStarLogNodeInWordGameObjectList)
+            //{
+            //    if (obj != null)
+            //    {
+            //        Destroy(obj);
+            //    }
+            //}
+        }
 
 
+        public void MoveAgent(AStarNode aStarNodes)
+        {
+            SetPosition(aStarNodes.pos.x, aStarNodes.pos.y);
+        }
 
+        public async Task Timer(float duration, Action action)
+        {
+            float timeElapsed = 0f;
+            while (timeElapsed < duration)
+            {
+                timeElapsed += Time.deltaTime;
+                await Task.Yield();
+            }
+
+            action?.Invoke();
+        }
+
+        public void SeeNPC(RaycastHit2D hit)
+        {
+
+        }
     }
 }
 

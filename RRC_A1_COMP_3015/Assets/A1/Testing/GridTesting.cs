@@ -38,7 +38,7 @@ namespace A1 {
         // Update is called once per frame
         void TestPlayer() {
             // test position 1,1
-            testPlayer.SetPlayerPosition(movePlayerX, movePlayerY);
+            testPlayer.SetPosition(movePlayerX, movePlayerY);
 
             grid.IsValidTile(movePlayerX + 1, movePlayerY);
             grid.IsValidTile(movePlayerX - 1, movePlayerY);

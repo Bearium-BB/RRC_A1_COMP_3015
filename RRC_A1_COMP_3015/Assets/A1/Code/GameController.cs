@@ -2,6 +2,8 @@ using A1;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using UnityEditor.Rendering.Universal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
@@ -30,10 +32,13 @@ namespace A1 {
 
         private AStar aStar = new AStar();
 
+        private float turnTimer = 0;
+        private bool turnDecider = false;
 
         public void Start() {
             // Create the Grid
             grid.GenerateNewGrid_Witch_RandomWalls_And_Win_Point(xStartTiles, yStartTiles, wallProbability);
+
             currentPlayer = Instantiate(thePlayer_Prefab);
             float NPCX = Random.Range(0, 50);
             float NPCY = Random.Range(0, 50);
@@ -46,20 +51,11 @@ namespace A1 {
             currentNPC.SetGrid(grid);
             aStar.SetGrid(grid);
 
-            currentNPC.winPointPos = currentPlayer.transform;
-
             List<AStarNode> aStarNodes = aStar.PathFinding(Vector2Int.zero, grid.GetWinPointPos());
             if (aStarNodes.Count == 0)
             {
-                try
-                {
-                    string currentSceneName = SceneManager.GetActiveScene().name;
-                    SceneManager.LoadScene(currentSceneName);
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError(e);
-                }
+                string currentSceneName = SceneManager.GetActiveScene().name;
+                SceneManager.LoadScene(currentSceneName);
 
             }
 
@@ -67,14 +63,46 @@ namespace A1 {
         }
         public void Update() 
         {
-            cam.position = new Vector3(currentPlayer.transform.position.x, currentPlayer.transform.position.y,cam.position.z);
+            turnTimer += Time.deltaTime;
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                string currentSceneName = SceneManager.GetActiveScene().name;
-                SceneManager.LoadScene(currentSceneName);
+
+            }
+
+
+            if (turnTimer >= 0.5f)
+            {
+                turnDecider = !turnDecider;
+                if (turnDecider)
+                {
+
+                }
+                else
+                {
+
+                }
+                turnTimer = 0;
             }
         }
+
+        public void LateUpdate()
+        {
+            cam.position = new Vector3(currentPlayer.transform.position.x, currentPlayer.transform.position.y, cam.position.z);
+        }
+
+        //void FollowPath(Vector2Int start, Vector2Int end , AbleToPathfind ableToPathfind)
+        //{
+        //    List<AStarNode> path = aStar.PathFinding(start, end);
+        //    ableToPathfind.MoveAgent(path);
+
+        //}
+        //void OneIncrementOnPath (Vector2Int start, Vector2Int end, AbleToPathfind ableToPathfind)
+        //{
+        //    List<AStarNode> path = aStar.PathFinding(start, end);
+        //    ableToPathfind.MoveAgent(path[path.Count-1]);
+
+        //}
     }
 }
 

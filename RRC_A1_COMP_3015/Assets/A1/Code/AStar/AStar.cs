@@ -35,7 +35,6 @@ public class AStar
             List<AStarNode> searchedNodes = new List<AStarNode>();
 
             AStarNode currentnode = notSearchNodes.First();
-            Debug.Log(startingNode);
 
             while (notSearchNodes.Count > 0)
             //for (int i = 0; i < 10000; i++)
@@ -86,7 +85,6 @@ public class AStar
                     {
                         List<AStarNode> parents = currentnode.GetAllParent();
 
-                        Debug.Log(startingNode);
                         AStarNode node = parents.Where(x => x.pos == startingNode).FirstOrDefault();
                         if (node != null)
                         {

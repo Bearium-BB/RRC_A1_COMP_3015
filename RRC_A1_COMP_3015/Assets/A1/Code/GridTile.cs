@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using A1;
+using UnityEditor.SceneManagement;
 
 namespace A1 {
 
@@ -43,6 +44,7 @@ namespace A1 {
         public void UpdateArt() {
             if (isWall) {
                 _spriteRenderer.sprite = wall;
+                gameObject.AddComponent<BoxCollider2D>();
             }
             else if (isWinPoint)
             {
