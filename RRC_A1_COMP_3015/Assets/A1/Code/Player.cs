@@ -187,7 +187,7 @@ namespace A1 {
 
         public void SeeNPC(RaycastHit2D hit)
         {
-            Vector3 opposingDirectionForNPC = -(transform.position - hit.collider.transform.position).normalized;
+            Vector3 opposingDirectionForNPC = (transform.position - hit.collider.transform.position).normalized;
             if (hit.collider.tag == "NPC")
             {
                 Debug.Log(opposingDirectionForNPC);
