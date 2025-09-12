@@ -9,7 +9,7 @@ public class MoverAStartAction : MonoBehaviour
     public void MoveAgentStep(MoverAStartModels moverAStartModels)
     {
         AStar aStar = new AStar(moverAStartModels.player.GetGrid());
-        List<AStarNode> aStarNodes = aStar.PathFinding(moverAStartModels.start, moverAStartModels.end);
+        List<AStarNode> aStarNodes = aStar.PathFinding(moverAStartModels.start, moverAStartModels.end, moverAStartModels.movingWall);
         aStarNodes.Reverse();
         if (aStarNodes.Count != 0)
         {

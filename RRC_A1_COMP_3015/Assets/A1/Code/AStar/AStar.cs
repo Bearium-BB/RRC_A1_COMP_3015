@@ -28,97 +28,101 @@ public class AStar
 
     public List<AStarNode> PathFinding(Vector2Int startingNode, Vector2Int endNode , List<Vector2Int> movingWall = null)
     {
-            List<AStarNode> notSearchNodes = new List<AStarNode>();
-            notSearchNodes.Add(new AStarNode(null, startingNode, endNode, startingNode));
-            List<AStarNode> searchedNodes = new List<AStarNode>();
+        List<AStarNode> notSearchNodes = new List<AStarNode>();
+        notSearchNodes.Add(new AStarNode(null, startingNode, endNode, startingNode));
+        List<AStarNode> searchedNodes = new List<AStarNode>();
 
-            AStarNode currentnode = notSearchNodes.First();
+        AStarNode currentnode = notSearchNodes.First();
 
-            while (notSearchNodes.Count > 0)
-            //for (int i = 0; i < 10000; i++)
+        while (notSearchNodes.Count > 0)
+        //for (int i = 0; i < 10000; i++)
+        {
+            if (!ValidateMove(endNode.x, endNode.y))
             {
-                if (!ValidateMove(endNode.x, endNode.y))
-                {
-                    break;
-                }
-
-                if (!ValidateMove(startingNode.x, startingNode.y))
-                {
-                    break;
-                }
-
-
-                List<AStarNode> neighbors = GetNeighbors(currentnode, endNode, movingWall);
-
-                foreach (AStarNode neighbor in neighbors)
-                {
-                    // I was baffled by an issue I couldn’t figure out for the longest time. 
-                    // At first, I was only checking against the searched nodes. 
-                    // There would be neighbors waiting in the list to be searched. 
-                    // If a node was placed right beside them and the area was searched again, 
-                    // it could pick up another neighbor that wasn’t meant to be there, 
-                    // since it was already in the searched node list.                    
-                    // so duplicates would sneak in since they weren’t searched yet, 
-                    // meaning they could be added to the not-searched list again. 
-                    // You have to check both to prevent memory leaks from happening.
-                    if (!searchedNodes.Any(x => x.pos == neighbor.pos) && !notSearchNodes.Any(x => x.pos == neighbor.pos))
-                    {
-                        notSearchNodes.Add(neighbor);
-                    }
-                    //else
-                    //{
-                    //    neighbor.parent = currentnode;
-                    //}
-                }
-
-                if (neighbors.Count == 0)
-                {
-                    break;
-                }
-
-
-                if (currentnode != null)
-                {
-                    if (currentnode.pos == endNode)
-                    {
-                        List<AStarNode> parents = currentnode.GetAllParent();
-
-                        AStarNode node = parents.Where(x => x.pos == startingNode).FirstOrDefault();
-                        if (node != null)
-                        {
-                            parents.Remove(node);
-                        }
-                        else
-                        {
-                            Debug.Log("Did not remove starting node");
-                        }
-
-                        return parents;
-                    }
-                }
-
-
-                currentnode = notSearchNodes.OrderBy(x => x.f).FirstOrDefault();
-
-                notSearchNodes.Remove(currentnode);
-
-                if (currentnode != null)
-                {
-                    if (!searchedNodes.Any(x => x.pos == currentnode.pos))
-                    {
-                        searchedNodes.Add(currentnode);
-                    }
-                }
-
+                break;
             }
-            return new List<AStarNode>();
+
+            if (!ValidateMove(startingNode.x, startingNode.y))
+            {
+                break;
+            }
+
+
+            List<AStarNode> neighbors = GetNeighbors(currentnode, startingNode, endNode, movingWall);
+
+            foreach (AStarNode neighbor in neighbors)
+            {
+                // I was baffled by an issue I couldn’t figure out for the longest time. 
+                // At first, I was only checking against the searched nodes. 
+                // There would be neighbors waiting in the list to be searched. 
+                // If a node was placed right beside them and the area was searched again, 
+                // it could pick up another neighbor that wasn’t meant to be there, 
+                // since it was already in the searched node list.                    
+                // so duplicates would sneak in since they weren’t searched yet, 
+                // meaning they could be added to the not-searched list again. 
+                // You have to check both to prevent memory leaks from happening.
+                if (!searchedNodes.Any(x => x.pos == neighbor.pos) && !notSearchNodes.Any(x => x.pos == neighbor.pos))
+                {
+                    notSearchNodes.Add(neighbor);
+                }
+                //else
+                //{
+                //    neighbor.parent = currentnode;
+                //}
+            }
+
+            if (neighbors.Count == 0)
+            {
+                break;
+            }
+
+
+            if (currentnode != null)
+            {
+                if (currentnode.pos == endNode)
+                {
+                    List<AStarNode> parents = currentnode.GetAllParent();
+
+                    AStarNode node = parents.Where(x => x.pos == startingNode).FirstOrDefault();
+                    if (node != null)
+                    {
+                        parents.Remove(node);
+                    }
+                    else
+                    {
+                        Debug.Log("Did not remove starting node");
+                    }
+
+                    return parents;
+                }
+            }
+
+
+            currentnode = notSearchNodes.OrderBy(x => x.f).FirstOrDefault();
+
+            notSearchNodes.Remove(currentnode);
+
+            if (currentnode != null)
+            {
+                if (!searchedNodes.Any(x => x.pos == currentnode.pos))
+                {
+                    searchedNodes.Add(currentnode);
+                }
+            }
+
+        }
+        return new List<AStarNode>();
 
 
 
     }
 
-    public List<AStarNode> GetNeighbors(AStarNode node, Vector2Int endNode , List<Vector2Int> movingWall = null)
+    public List<AStarNode> GetNeighbors(AStarNode node, Vector2Int startNode, Vector2Int endNode , List<Vector2Int> movingWall = null)
     {
+        if (movingWall != null)
+        {
+            Debug.Log($"GetNeighbors {movingWall.Count}");
+        }
         List<AStarNode> aStarNodes = new List<AStarNode>();
 
         foreach (Vector2Int item in directions)
@@ -129,12 +133,10 @@ public class AStar
 
                 if (ValidateMove(newPos.x, newPos.y))
                 {
-                    Debug.Log(movingWall);
 
                     if (movingWall != null)
                     {
-                        Debug.Log(movingWall.Count);
-                        if (!movingWall.Contains(newPos))
+                        if (!movingWall.Any(x => x == newPos || newPos == startNode))
                         {
                             aStarNodes.Add(new AStarNode(node, newPos, endNode, newPos));
                         }

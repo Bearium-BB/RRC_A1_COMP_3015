@@ -77,7 +77,10 @@ namespace A1 {
                 {
                     List<AStarNode> aStarNodes = aStar.PathFinding(currentNPC.GetPosition(), currentPlayer.GetPosition());
                     aStarNodes.Reverse();
-                    currentNPC.MoveAgent(aStarNodes[0]);
+                    if (aStarNodes.Count != 0)
+                    {
+                        currentNPC.MoveAgent(aStarNodes[0]);
+                    }
                 }
                 turnTimer = 0;
             }

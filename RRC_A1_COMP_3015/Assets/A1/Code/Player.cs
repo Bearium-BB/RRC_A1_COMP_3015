@@ -44,7 +44,7 @@ namespace A1 {
                 ProcessInput();
             }
 
-            if (HowCloseIsNPC() <= 30f)
+            if (HowCloseIsNPC() <= 5f)
             {
                 seeNPC = true;
             }
@@ -210,7 +210,6 @@ namespace A1 {
                 movingWall.Add(movingWall[0] + direction);
   
             }
-            Debug.Log(movingWall.Count);
             MoverAStartModels moverAStartModels = new MoverAStartModels(this, new Vector2Int(currentPosX, currentPosY), grid.GetWinPointPos(), movingWall);
 
             onSeeNPC.Invoke(moverAStartModels);
@@ -231,7 +230,6 @@ namespace A1 {
             }
             else 
             {
-                Debug.Log("hi");
                 SeeNPCAction();
             }
         }

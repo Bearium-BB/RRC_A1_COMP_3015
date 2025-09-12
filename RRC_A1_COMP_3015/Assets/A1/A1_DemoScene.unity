@@ -433,7 +433,7 @@ PrefabInstance:
       objectReference: {fileID: 22087806}
     - target: {fileID: 7104726645435656132, guid: d5751bed5cb63b341874f6e42c4ed422, type: 3}
       propertyPath: xStartTiles
-      value: 3
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7104726645435656132, guid: d5751bed5cb63b341874f6e42c4ed422, type: 3}
       propertyPath: yStartTiles
@@ -445,7 +445,7 @@ PrefabInstance:
       objectReference: {fileID: -1203853301170824319, guid: f53bb14f38fcf58438f4c6370c31b9a0, type: 3}
     - target: {fileID: 7104726645435656132, guid: d5751bed5cb63b341874f6e42c4ed422, type: 3}
       propertyPath: wallProbability
-      value: 0
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 7104726645435656132, guid: d5751bed5cb63b341874f6e42c4ed422, type: 3}
       propertyPath: scriptableObjectGrid2D
