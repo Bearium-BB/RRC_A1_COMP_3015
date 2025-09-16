@@ -90,6 +90,12 @@ namespace A1 {
                 string currentSceneName = SceneManager.GetActiveScene().name;
                 SceneManager.LoadScene(currentSceneName);
             }
+
+            if (currentNPC.GetPosition() == currentPlayer.GetPosition())
+            {
+                string currentSceneName = SceneManager.GetActiveScene().name;
+                SceneManager.LoadScene(currentSceneName);
+            }
         }
 
         public void LateUpdate()

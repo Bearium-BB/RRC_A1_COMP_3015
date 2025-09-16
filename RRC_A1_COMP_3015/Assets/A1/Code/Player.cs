@@ -1,16 +1,10 @@
 using A1;
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 namespace A1 {
 
@@ -202,18 +196,22 @@ namespace A1 {
         public void SeeNPCAction()
         {
 
-            List<Vector2Int> movingWall = new List<Vector2Int> { new Vector2Int((int)transformNPC.position.x, (int)transformNPC.position.y) };
-            List<Vector2Int> directions = new List<Vector2Int> { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+            //List<Vector2Int> movingWall = new List<Vector2Int> { new Vector2Int((int)transformNPC.position.x, (int)transformNPC.position.y) };
+            //List<Vector2Int> directions = new List<Vector2Int> { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
 
-            foreach (Vector2Int direction in directions)
-            {
-                movingWall.Add(movingWall[0] + direction);
-  
-            }
-            MoverAStartModels moverAStartModels = new MoverAStartModels(this, new Vector2Int(currentPosX, currentPosY), grid.GetWinPointPos(), movingWall);
+            //foreach (Vector2Int direction in directions)
+            //{
+            //    movingWall.Add(movingWall[0] + direction);
 
+            //}
+
+            //Vector3 pos = (transform.position - transformNPC.position).normalized;
+
+            //Mover(new Vector2Int(Mathf.RoundToInt(pos.x), Mathf.RoundToInt(pos.y)) + new Vector2Int(currentPosX,currentPosY));
+            //Debug.Log(new Vector2Int(Mathf.RoundToInt(pos.x), Mathf.RoundToInt(pos.y)) + new Vector2Int(currentPosX, currentPosY));
+
+            MoverAStartModels moverAStartModels = new MoverAStartModels(this, new Vector2Int(currentPosX, currentPosY), grid.GetWinPointPos());
             onSeeNPC.Invoke(moverAStartModels);
-            
         }
 
         public void GoToWinPoint()

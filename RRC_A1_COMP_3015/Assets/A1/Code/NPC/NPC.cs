@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class NPC : MonoBehaviour , AbleToPathfind
+public class NPC : MonoBehaviour
 {
     private Grid2D grid;
 
