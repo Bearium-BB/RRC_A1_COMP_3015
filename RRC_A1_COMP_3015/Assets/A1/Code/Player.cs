@@ -18,6 +18,8 @@ namespace A1 {
         private int currentPosY;
         private float timePassFromLastInput;
 
+        bool seeNPC;
+
         public GameObject aStarLogNodeInWordGameObject;
 
         public Transform transformNPC;
@@ -25,7 +27,8 @@ namespace A1 {
         public UnityEvent<MoverAStartModels> onSeeNPC;
         public UnityEvent<MoverAStartModels> notSeeNPC;
 
-        bool seeNPC;
+        public bool controlPlayer = false;
+
         // --- Input  --- 
 
         public void Update() {
@@ -33,19 +36,25 @@ namespace A1 {
 
             timePassFromLastInput += Time.deltaTime;
 
-            if (timePassFromLastInput >= 0.3f)
+            if (controlPlayer)
             {
-                ProcessInput();
-            }
-
-            if (HowCloseIsNPC() <= 5f)
-            {
-                seeNPC = true;
+                if (timePassFromLastInput >= 0.3f)
+                {
+                    ProcessInput();
+                }
             }
             else
             {
-                seeNPC = false;
+                if (HowCloseIsNPC() <= 5f)
+                {
+                    seeNPC = true;
+                }
+                else
+                {
+                    seeNPC = false;
+                }
             }
+
 
         }
 
@@ -195,21 +204,6 @@ namespace A1 {
 
         public void SeeNPCAction()
         {
-
-            //List<Vector2Int> movingWall = new List<Vector2Int> { new Vector2Int((int)transformNPC.position.x, (int)transformNPC.position.y) };
-            //List<Vector2Int> directions = new List<Vector2Int> { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
-
-            //foreach (Vector2Int direction in directions)
-            //{
-            //    movingWall.Add(movingWall[0] + direction);
-
-            //}
-
-            //Vector3 pos = (transform.position - transformNPC.position).normalized;
-
-            //Mover(new Vector2Int(Mathf.RoundToInt(pos.x), Mathf.RoundToInt(pos.y)) + new Vector2Int(currentPosX,currentPosY));
-            //Debug.Log(new Vector2Int(Mathf.RoundToInt(pos.x), Mathf.RoundToInt(pos.y)) + new Vector2Int(currentPosX, currentPosY));
-
             MoverAStartModels moverAStartModels = new MoverAStartModels(this, new Vector2Int(currentPosX, currentPosY), grid.GetWinPointPos());
             onSeeNPC.Invoke(moverAStartModels);
         }
@@ -222,13 +216,16 @@ namespace A1 {
 
         public void WhatToDO()
         {
-            if (!seeNPC)
+            if (!controlPlayer)
             {
-                GoToWinPoint();
-            }
-            else 
-            {
-                SeeNPCAction();
+                if (!seeNPC)
+                {
+                    GoToWinPoint();
+                }
+                else
+                {
+                    SeeNPCAction();
+                }
             }
         }
 

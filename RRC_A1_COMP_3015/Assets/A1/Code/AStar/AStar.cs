@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using UnityEditor.Callbacks;
 using UnityEngine;
 
 public class AStar
@@ -35,7 +34,6 @@ public class AStar
         AStarNode currentnode = notSearchNodes.First();
 
         while (notSearchNodes.Count > 0)
-        //for (int i = 0; i < 10000; i++)
         {
             if (!ValidateMove(endNode.x, endNode.y))
             {
@@ -65,10 +63,6 @@ public class AStar
                 {
                     notSearchNodes.Add(neighbor);
                 }
-                //else
-                //{
-                //    neighbor.parent = currentnode;
-                //}
             }
 
             if (neighbors.Count == 0)
@@ -112,17 +106,10 @@ public class AStar
 
         }
         return new List<AStarNode>();
-
-
-
     }
 
     public List<AStarNode> GetNeighbors(AStarNode node, Vector2Int startNode, Vector2Int endNode , List<Vector2Int> movingWall = null)
     {
-        if (movingWall != null)
-        {
-            Debug.Log($"GetNeighbors {movingWall.Count}");
-        }
         List<AStarNode> aStarNodes = new List<AStarNode>();
 
         foreach (Vector2Int item in directions)

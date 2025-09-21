@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using A1;
-using UnityEditor.SceneManagement;
 
 namespace A1 {
 
